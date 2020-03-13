@@ -22,10 +22,10 @@ namespace OIGAME_CONSULTORES_Test.Controllers
         // GET: Customers
         public async Task<ActionResult> Index(int? page, string search)
         {
-
-
+           
             try
             {
+                
                 int pageZise = 10;
                 int pageNumber = (page ?? 1);
 
