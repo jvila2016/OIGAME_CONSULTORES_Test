@@ -1,0 +1,143 @@
+﻿@*@model IEnumerable<OIGAME_CONSULTORES_Test.Models.Customer1>*@
+@model IPagedList<OIGAME_CONSULTORES_Test.Models.Customer1>
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "Index";
+
+}
+
+<style type="text/css">
+    label:after {
+        content: ": "
+    }
+
+    .panel-transparent {
+        background: none;
+    }
+
+        .panel-transparent .panel-heading {
+            background: rgba(122, 130, 136, 0.2) !important;
+        }
+
+        .panel-transparent .panel-body {
+            background: rgba(46, 51, 56, 0.2) !important;
+        }
+
+    nav.mainNav {
+        display: inline-block;
+        margin: 1px;
+        padding: 1px;
+        border: 0.5px solid #A3BBC3;
+    }
+
+        nav.mainNav > .navItem {
+            display: inline-block;
+            padding: 1px;
+            background: #31B0D5;
+            color: #fff;
+        }
+</style>
+<br>
+<p>
+    @Html.ActionLink(Resources.Global.CREATE, "Create", null, new { @style = "color:#16425F" })
+</p>
+<div class="form-horizontal">
+
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4"><center><h2 style="color:#005282;font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">@Resources.Customers.ListCustomer</h2></center></div>
+        <div class="col-lg-4"></div>
+    </div>
+    <div class="panel-group">
+        <div class="panel panel-primary panel-transparent">
+            <div class="panel-body alert-info">
+
+                @using (Html.BeginForm("Index", "Customers", FormMethod.Get))
+                {
+
+                    if (User.IsInRole("Admin"))
+                    {
+                        <p>
+                            <input class="input-group-text" type="text" name="search" placeholder="@Resources.Customers.Search1 @Resources.Customers.CustomerName@Resources.Customers.Search2 ..." style="color:#1F7BB8" />
+
+                            <input class="btn-sm btn-success" type="submit" name="submit" value=@Resources.Customers.Search3>
+
+                        </p>
+                    }
+
+                }
+                <div class="table-responsive">
+                    <table class="table">
+                      <tr>
+                            <th  style="color:#16425F">
+                                Id
+                            </th> 
+                            <th  style="color:#16425F">
+                                @*@Html.DisplayNameFor(model => model.CustomerType.Description)*@
+                                @Resources.Customers.APP_CustomerType
+                            </th>
+                            <th  style="color:#16425F">
+                                @*@Html.DisplayNameFor(model => model.Passport)*@
+                                @Resources.Customers.APP_Passport
+                            </th>
+                            <th  style="color:#16425F">
+                                @*@Html.DisplayNameFor(model => model.FirstName)*@
+                                @Resources.Customers.APP_FirstName
+                            </th>
+                            <th  style="color:#16425F">
+                                @*@Html.DisplayNameFor(model => model.LastName)*@
+                                @Resources.Customers.APP_LastName
+                            </th>
+                            <th style="color:#16425F">
+                                @*@Html.DisplayNameFor(model => model.Active)*@
+                                @Resources.Customers.APP_Active
+                            </th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                      <tr>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.Id)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.Description)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.Passport)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.FirstName)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.LastName)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.Active)
+                          </td>
+                          <td>
+                              <div class="panel-group">
+                                  <nav class="mainNav">
+                                      <div class="navItem"><input type="button" class="btn-sm btn-info" value="@Resources.Global.APP_EDIT" onclick="location.href='@Url.Action("Edit", "Customers")?id=' + @item.Id;" /></div>
+                                      <div class="navItem"><input type="button" class="btn-sm btn-info" value="@Resources.Global.APP_DETAILS" onclick="location.href='@Url.Action("Details", "Customers")?id=' + @item.Id;" /></div>
+                                      <div class="navItem"><input type="button" class="btn-sm btn-info" value="@Resources.Global.APP_DELETE" onclick="location.href='@Url.Action("Delete", "Customers")?id=' + @item.Id;" /></div>
+                                  </nav>
+                              </div>
+                          </td>
+                      </tr>
+                        }
+
+                    </table>
+                    <br />
+                    <div style="margin:5px;">
+                        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                        @Html.PagedListPager(Model, page => Url.Action("Index",
+                        new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, search = Request.QueryString["search"]}))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

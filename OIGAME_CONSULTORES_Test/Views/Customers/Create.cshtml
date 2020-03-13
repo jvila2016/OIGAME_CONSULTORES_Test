@@ -1,0 +1,124 @@
+﻿@model OIGAME_CONSULTORES_Test.Models.Customer
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<style type="text/css">
+    label:after {
+        content: ": "
+    }
+
+    .panel-transparent {
+        background: none;
+    }
+
+        .panel-transparent .panel-heading {
+            background: rgba(122, 130, 136, 0.2) !important;
+        }
+
+        .panel-transparent .panel-body {
+            background: rgba(46, 51, 56, 0.2) !important;
+        }
+</style>
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4"><center><h2 style="color:#005282;font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">@Resources.Customers.ADDCustomer</h2></center></div>
+            <div class="col-lg-4"></div>
+        </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="panel-group">
+            <div class="panel panel-primary panel-transparent">
+                <div class="panel-body alert-info">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CustomerTypeId, Resources.Customers.APP_CustomerType, htmlAttributes: new { @class = "control-label col-md-2", @style = "color:#16425F"})
+                        <div class="col-md-10">
+                            @Html.DropDownList("CustomerTypeId", null, htmlAttributes: new { @class = "form-control btn btn-primary mb1 bg-teal dropdown-toggle dropdown-toggle-split" })
+                            @Html.ValidationMessageFor(model => model.CustomerTypeId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Passport, Resources.Customers.APP_Passport, htmlAttributes: new { @class = "control-label col-md-2" ,@style = "color:#16425F" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Passport, new { htmlAttributes = new { @class = "form-control", onchange = "PastportExist(value)" } })
+                            @Html.ValidationMessageFor(model => model.Passport, "", new { @class = "text-danger" })
+                            <h6 id="pastPID" style="color:red"></h6>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.FirstName, Resources.Customers.APP_FirstName, htmlAttributes: new { @class = "control-label col-md-2" ,@style = "color:#16425F" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.LastName, Resources.Customers.APP_LastName, htmlAttributes: new { @class = "control-label col-md-2",  @style = "color:#16425F" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Active, Resources.Customers.APP_Active, htmlAttributes: new { @class = "control-label col-md-2", @style = "color:#16425F" })
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                @Html.EditorFor(model => model.Active)
+                                @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value=@Resources.Global.CREATE class="btn btn-default btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink(@Resources.Global.BackToList, "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    function PastportExist(passport) {
+        var resultQry = true;
+            $.ajax({
+                url: '@Url.Action("PastportExist", "Customers")',
+                method: 'GET',
+                data: {
+                    Passport: passport
+                },
+                success: function (data) { resultQry = data; },
+                async: false
+            });
+
+        if (resultQry == 'false') {
+            document.getElementById('pastPID').innerHTML = "Passport " + passport + " already exist / Pasaporte ya existe";
+            document.getElementById('Passport').value = "";
+        }
+        else {
+            document.getElementById('pastPID').innerHTML = "";
+        }
+    }
+</script>

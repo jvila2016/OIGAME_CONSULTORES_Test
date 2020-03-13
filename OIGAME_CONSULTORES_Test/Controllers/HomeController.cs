@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OIGAME_CONSULTORES_Test.Models.Security;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,6 +11,10 @@ namespace OIGAME_CONSULTORES_Test.Controllers
     {
         public ActionResult Index()
         {
+            var strE = Encr_Decr.Encrypt("data source=DESARROLLOVILA;initial catalog=OIGAME_CONSULTORES_Test;user id=sa;password=TURjvb/2014;MultipleActiveResultSets=True;App=EntityFramework");
+
+            var dec = Encr_Decr.Decrypt(strE);
+
             return View();
         }
 

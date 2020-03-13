@@ -4,12 +4,23 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
+
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+
+    <link href="~/Content/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="~/CSS/hover.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="~/CSS/hover-min.css" media="screen" rel="stylesheet" type="text/css" />
+
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+<body class="img-fluid" style="background-image: url(../../Content/Images/260.jpg); background-repeat: no-repeat;image-rendering:auto;" alt="Responsive image">
+    <div class="navbar navbar-inverse  navbar-fixed-top navbar-custom">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -17,18 +28,103 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+                @Html.ActionLink(Resources.Global.APP_NAME, "Index", "Home", new { area = "" }, new { @class = "navbar-brand h1Text", style = "color:#5DA1B8;" })
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+
+            @using Microsoft.AspNet.Identity
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li id="adm" class="dropdown">
+                                <a class="dropdown-toggle dropbtn hvr-wobble-bottom hvr-sweep-to-bottom" href="#" data-toggle="dropdown" role="button" aria-expanded="false"><p style="font-size:medium;color:#E9F7EF">@Resources.Global.Menu_Administration</p><span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu" style="color:#D8D6E1;background-color: #c0eef7;opacity:5">
+                                    <li>@Html.ActionLink(Resources.Global.APP_Customers, "Index", "Customers", null, new { @class = "dropdown-item", style = "color:#03477D;font-size:medium;" })</li>
+                                    <li>@Html.ActionLink(Resources.Global.APP_CustomerTypes, "Index", "CustomerTypes", null, new { @class = "dropdown-item", style = "color:#03477D;font-size:medium" })</li>
+                                    <li>@Html.ActionLink(Resources.Global.APP_CreateCustomerSP, "CreateCustomewrFromSP", "Customers", null, new { @class = "dropdown-item", style = "color:#03477D;font-size:medium" })</li>
+                                    <li>@Html.ActionLink(Resources.Global.APP_IndexFromSP, "IndexFromSP", "Customers", null, new { @class = "dropdown-item", style = "color:#03477D;font-size:medium" })</li>
+                                    <li>@Html.ActionLink(Resources.Global.APP_IndexFromSPAllCustomerType1, "IndexFromSPAllCustomerType1", "Customers", null, new { @class = "dropdown-item", style = "color:#03477D;font-size:medium" })</li>
+                                    <li>@Html.ActionLink(Resources.Global.APP_DeleteAllCustomerEnding7, "DeleteAllCustomerEnding7", "Customers", null, new { @class = "dropdown-item", style = "color:#03477D;font-size:medium" })</li>
+                                    <li class="dropdown-submenu">
+                                        <a class="hvr-bubble-float-right dropdown-item dropdown-toggle" href="#" style="color:#03477D;font-size:medium">Text4</a>
+                                        <ul class="dropdown-menu" style="color:#D8D6E1;background-color: #c0eef7;opacity:5">
+                                            <li>@Html.ActionLink("Text4.1", "", "", null, new { @class = "dropdown-item", style = "color:#03477D;font-size:medium" })</li>
+                                            <li>@Html.ActionLink("text4.2", "", "", null, new { @class = "dropdown-item", style = "color:#03477D;font-size:medium" })</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        @if (User.IsInRole("AdminTurnos"))
+                        {
+                            <li class="dropdown">
+                                @Html.ActionLink("Administrar Turnos", "Index", "AspNetUsers", new { UserID = User.Identity.GetUserId() }, new { @class = "dropdown-item", style = "color:#D8D6E1;font-size:medium" })
+                            </li>
+                        }
+                        @if (User.IsInRole("ConsultarTurnos"))
+                        {
+                            <li class="dropdown">
+                                @Html.ActionLink("Consultar Turnos", "Index", "AspNetUsers", new { UserID = User.Identity.GetUserId() }, new { @class = "dropdown-item", style = "color:#D8D6E1;font-size:medium" })
+                            </li>
+                        }
+
+                    </ul>
+                    <div class="nav navbar-nav navbar-right">
+                        <p class="navbar-text" style="font-size:medium">
+
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <ul class="nav navbar-nav navbar-right">
+                                        <li>
+                                            @Html.ActionLink("Hola " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+                                        </li>
+                                        <li>
+                                            <a href="javascript:document.getElementById('logoutForm').submit()" style="color:cornflowerblue">@Resources.Global.APP_SingOff</a>
+                                        </li>
+                                    </ul>
+                                }
+
+                            }
+
+                            else
+                            {
+                                @Session["UserName"].ToString()
+                                if (Session["IsAuthen"].ToString() == "True")
+                                {
+
+
+                                    <span style="font-size:medium">(@Html.ActionLink(Resources.Global.APP_SingOff, "LogOutUser", "Login", new { }, new { }))</span>
+
+                                }
+
+                            }
+                        </p>
+                    </div>
+                </div>
+            }
+            else
+            {
+
+                <ul class="nav navbar-nav navbar-right">
+
+
+                    <li>@Html.ActionLink(Resources.Global.APP_LOGIN, "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
                 </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
+
+            }
+
         </div>
     </div>
+    <br />
+    <br />
     <div class="container body-content">
         @RenderBody()
         <hr />
@@ -36,9 +132,7 @@
             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
         </footer>
     </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
 </body>
+@Styles.Render("~/Content/style.css")
+@Styles.Render("~/Content/mainStyle.css")
 </html>

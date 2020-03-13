@@ -1,0 +1,94 @@
+﻿@*@model IEnumerable<OIGAME_CONSULTORES_Test.Models.CustomerType>*@
+@model IPagedList<OIGAME_CONSULTORES_Test.Models.CustomerType>
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style type="text/css">
+    label:after {
+        content: ": "
+    }
+
+    .panel-transparent {
+        background: none;
+    }
+
+        .panel-transparent .panel-heading {
+            background: rgba(122, 130, 136, 0.2) !important;
+        }
+
+        .panel-transparent .panel-body {
+            background: rgba(46, 51, 56, 0.2) !important;
+        }
+</style>
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div class="form-horizontal">
+
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4"><center><h2 style="color:#005282;font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">@Resources.Customers.ListCustomer</h2></center></div>
+        <div class="col-lg-4"></div>
+    </div>
+    <div class="panel-group">
+        <div class="panel panel-primary panel-transparent">
+            <div class="panel-body alert-info">
+
+                @using (Html.BeginForm("Index", "Programs", FormMethod.Get))
+                {
+
+                    if (User.IsInRole("Admin"))
+                    {
+                        <p>
+                            <input class="input-group-text" type="text" name="search" placeholder="@Resources.Customers.Search1 @Resources.Customers.CustomerName@Resources.Customers.Search2 ..." style="color:#1F7BB8" />
+
+                            <input class="btn-sm btn-success" type="submit" name="submit" value=@Resources.Customers.Search3>
+
+                        </p>
+                    }
+
+                }
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th  style="color:#16425F">
+                                @*@Html.DisplayNameFor(model => model.Description)*@
+                                @Resources.Customers.CustomerType
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td style="color:#16425F">
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.ActionLink(@Resources.Global.APP_EDIT, "Edit", new { id = item.Id }) |
+                                    @Html.ActionLink(@Resources.Global.APP_DETAILS, "Details", new { id = item.Id }) |
+                                    @Html.ActionLink(@Resources.Global.APP_DELETE, "Delete", new { id = item.Id })
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+                    <br />
+                    <div style="margin:5px;">
+                        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                        @Html.PagedListPager(Model, page => Url.Action("Index",
+                        new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, search = Request.QueryString["search"]}))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

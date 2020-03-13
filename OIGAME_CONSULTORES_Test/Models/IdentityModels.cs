@@ -1,8 +1,10 @@
 ﻿using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using OIGAME_CONSULTORES_Test.Models.Security;
 
 namespace OIGAME_CONSULTORES_Test.Models
 {
@@ -20,8 +22,10 @@ namespace OIGAME_CONSULTORES_Test.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        static SqlConnection connection = new SqlConnection();
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+           : base("ModelOIGAMECONSULTORESTest", throwIfV1Schema: false)
+            //: base(connection.ConnectionString = Encr_Decr.Decrypt(System.Configuration.ConfigurationManager.ConnectionStrings["ModelOIGAMECONSULTORESTest"].ConnectionString), throwIfV1Schema: false)
         {
         }
 
